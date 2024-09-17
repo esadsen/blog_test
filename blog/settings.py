@@ -29,7 +29,9 @@ ALLOWED_HOSTS = ["127.0.0.1",
                  "localhost",
                  "192.168.1.154",]
 
-
+LOGIN_URL='/login/'
+LOGIN_REDIRECT_URL='/'
+LOGOUT_REDIRECT_URL='/'
 # Application definition
 
 INSTALLED_APPS = [
@@ -128,8 +130,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL= 'media/'
+MEDIA_ROOT= BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGIN_URL = '/user/login/' 

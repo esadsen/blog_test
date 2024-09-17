@@ -33,12 +33,32 @@
             </div>
         </div>
     </div>
-
+    {% if not request.user.is_authenticated %}
     <div class="bg-indigo-600 py-10 text-white text-center">
         <h3 class="text-2xl font-semibold mb-4">Join our community today!</h3>
-        <a href="/signup" class="bg-white text-indigo-600 font-semibold py-3 px-6 rounded-full hover:bg-gray-200 transition duration-300">
+        <a href="{% url 'user:signup' %}" class="bg-white text-indigo-600 font-semibold py-3 px-6 rounded-full hover:bg-gray-200 transition duration-300">
             Sign Up Now
         </a>
     </div>
-
+    {% else %}
+    <div class="bg-indigo-600 py-10 text-white text-center">
+        <h3 class="text-2xl font-semibold mb-4">Welcome back, {{ request.user.username }}!</h3>
+        
+    </div>
+    {% endif %}
+   
 {% endblock body %}
+
+{% block footer %}
+<footer class="py-6 px-6 bg-gradient-to-r from-purple-700 to-indigo-700 text-white">
+    <div class="flex justify-between">
+        <div class="w-2/3 pr-10">
+            <h3 class="mb-5 font-semibold text-gray-300">About</h3>
+            <p class="text-lg text-gray-400">Made by Esad Sen</p>
+        </div>
+
+        
+    </div>
+</footer>
+{% endblock footer %}
+
