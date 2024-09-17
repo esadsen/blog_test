@@ -8,7 +8,7 @@ from article.views import index
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('user.urls')),
-    #path('articles/', include('article.urls')),
+    path('articles/', include('article.urls')),
     path('', index, name='index'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
