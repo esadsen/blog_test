@@ -14,7 +14,6 @@ class LoginForm(AuthenticationForm):
 class SignupForm(UserCreationForm):
     class Meta:
         model = User
-        # phone_number ve address alanlarını çıkardık
         fields = ('username', 'email', 'password1', 'password2')
         
     username = forms.CharField(widget=forms.TextInput(attrs={
