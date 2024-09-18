@@ -16,9 +16,7 @@
         <div class="space-x-6">
             
             {% if request.user.is_authenticated %}
-                {% if request.user.is_staff %}
-                
-                {% endif %}
+                <a href="{% url 'article:article_list' %}" class="text-lg font-semibold hover:text-gray-500">Blogs</a>
                 <a href="{% url 'article:new' %}" class="text-lg font-semibold hover:text-gray-500">New Blog</a>
                 <a href="{% url 'user:logout' %}" class="text-lg font-semibold hover:text-gray-500">Log Out</a>
             {% else %}            

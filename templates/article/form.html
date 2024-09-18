@@ -5,24 +5,23 @@
 {% block body %}
 <style>
     textarea {
-        border: 2px solid #ccc;    /* Çerçeve rengi ve kalınlığı */
-        padding: 15px;             /* İç boşluk */
-        border-radius: 8px;        /* Yuvarlak kenarlar */
-        width: 176%;               /* Genişlik */
-        height: 200px;             /* Yükseklik */
-        font-size: 16px;           /* Yazı tipi boyutu */
+        border: 2px solid #ccc;   
+        padding: 15px;             
+        border-radius: 8px;        
+        width: 176%;               
+        height: 200px;             
+        font-size: 16px;           
     }
 
-    /* Placeholder stilini değiştirme */
     textarea::placeholder {
-        color: #888;               /* Yer tutucu yazı rengi */
-        font-style: italic;        /* İtalik yer tutucu yazı */
+        color: #888;               
+        font-style: italic;        
     }
 </style>
     <div class="max-w-2xl mx-auto bg-gray-100 shadow-md rounded-lg p-8 mt-10">
         <h1 class="mb-6 text-4xl font-bold text-gray-800">{{title}}</h1>
 
-        <form method="post" action="." enctype="multipart/form-data" class="space-y-6">
+        <form id="blog-form" method="post" enctype="multipart/form-data" class="space-y-6">
             {% csrf_token %}
             
             <!-- Form alanları -->
@@ -32,26 +31,62 @@
             </div>
 
             <!-- Hata mesajları -->
-            {% if form.errors or form.non_field_errors %}
-                <div class="p-4 bg-red-100 text-red-700 rounded-lg">
-                    <h2 class="font-bold mb-2">Please fix the following errors:</h2>
-                    {% for field in form %}
-                        {% if field.errors %}
-                            <p class="mb-1"><strong>{{ field.label }}:</strong> {{ field.errors }}</p>
-                        {% endif %}
-                    {% endfor %}
-                    {% if form.non_field_errors %}
-                        <p class="mt-3 text-red-700">{{ form.non_field_errors }}</p>
-                    {% endif %}
-                </div>
-            {% endif %}
+            <div id="error-messages" class="p-4 bg-red-100 text-red-700 rounded-lg hidden"></div>
 
             <!-- Gönder Butonu -->
             <div class="text-center">
-                <button class="mt-6 py-4 px-8 text-lg font-semibold bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 transition duration-300 ease-in-out text-white rounded-full shadow-lg">
+                <button type="submit" id="submit-btn" class="mt-6 py-4 px-8 text-lg font-semibold bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 transition duration-300 ease-in-out text-white rounded-full shadow-lg">
                     Submit
                 </button>
             </div>
         </form>
     </div>
+
+    <!-- AJAX ile form gönderimi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#blog-form').on('submit', function(event) {
+                event.preventDefault();
+            
+                // CKEditor içeriğini güncelle
+                if (typeof CKEDITOR !== 'undefined') {
+                    for (var instanceName in CKEDITOR.instances) {
+                        CKEDITOR.instances[instanceName].updateElement();
+                    }
+                }
+            
+                var formData = new FormData(this);  // Form verilerini al
+                var url = "{% url 'article:new' %}";
+            
+                // Content alanının değerini kontrol et ve log'a yaz
+                console.log('Content value:', $('#id_content').val());
+            
+                // Submit butonunu devre dışı bırak
+                $('#submit-btn').prop('disabled', true);
+            
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function(response) {
+                        alert('Blog created successfully!');
+                        window.location.href = "{% url 'article:article_list' %}";  // Blog listeleme sayfasına yönlendir
+                    },
+                    error: function(xhr) {
+                        var errors = xhr.responseJSON.errors;
+                        $('#error-messages').html('');
+                        for (var field in errors) {
+                            $('#error-messages').append('<p><strong>' + field + ':</strong> ' + errors[field] + '</p>');
+                        }
+                        $('#error-messages').removeClass('hidden');
+                        $('#submit-btn').prop('disabled', false);  // Butonu tekrar etkinleştir
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

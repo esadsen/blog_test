@@ -7,6 +7,8 @@ class Article(models.Model):
     title=models.CharField(max_length=50)
     content=RichTextField()
     created_date=models.DateTimeField(auto_now_add=True)
+    update_count = models.IntegerField(default=0) 
+
     
     def __str__(self):
         return self.title
